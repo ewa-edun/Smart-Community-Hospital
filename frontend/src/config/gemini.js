@@ -10,12 +10,16 @@ if (!API_KEY) {
 
 // Initialize the generative AI model
 const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-// Export model instance for use elsewhere
-export const getChatModel = async () => {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  const chat = model.startChat({
-    history: [], // you can optionally add conversation history here
-  });
-  return chat;
-};
+let chatSession = null;
+
+export async function askGemini(message) {
+  // Start a chat session if not already started
+  if (!chatSession) {
+    chatSession = await model.startChat({ history: [] });
+  }
+  // Send the message and get the response
+  const result = await chatSession.sendMessage(message);
+  return result.response.text();
+}
