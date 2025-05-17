@@ -111,3 +111,6 @@ Each includes dummy but realistic entries so you can demo predictions instantly.
 > **“One Dashboard. Two Lives Saved.”**
 > Community. Hospital. One solution.
 
+### Installs
+
+npm install @google/generative-ai
