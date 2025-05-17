@@ -114,3 +114,4 @@ Each includes dummy but realistic entries so you can demo predictions instantly.
 ### Installs
 
 npm install @google/generative-ai
+npm install firebase
