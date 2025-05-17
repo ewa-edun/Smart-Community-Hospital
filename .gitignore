@@ -1,3 +1,5 @@
 mvp_to-do.md
 .env
 node_modules
+frontend/node_modules
+frontend/.env

@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@tailwindcss/vite": "^4.1.7",
+    "firebase": "^11.7.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
+    "smart-community-hospital": "file:",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
