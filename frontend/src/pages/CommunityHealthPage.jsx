@@ -29,7 +29,7 @@ const CommunityHealthPage = () => {
   const [insights, setInsights] = useState(null);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
-  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "http://localhost:5000";
+  const BACKEND_URL = import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
 
   const handleFileChange = (e) =>  setUploadedFile(e.target.files[0]);
 
