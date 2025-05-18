@@ -68,6 +68,7 @@ Ask follow-up questions or get emergency recommendations from a Gemini-powered c
 | Data Handling      | Pandas, Numpy, Jupyter Notebook       |
 | AI Assistant       | Gemini API                            |
 | Hosting            | Vercel                                |
+| Authentication     | Firebase                              |
 
 ---
 
