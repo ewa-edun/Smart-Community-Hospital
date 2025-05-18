@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { askGemini } from "../config/gemini";
 
+// Remove leading markdown bullets, numbers, and whitespace
+function cleanMarkdown(line) {
+  return line.replace(/^(\s*[-*]\s*|\s*\d+\.\s*)/, '').trim();
+}
+
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     { sender: "bot", text: "Hi! How can I help you today?" }
@@ -50,7 +55,7 @@ const ChatbotPage = () => {
                   whiteSpace: "pre-wrap"
                 }}
               >
-              {msg.text}
+               {msg.sender === "bot" ? cleanMarkdown(msg.text) : msg.text}
             </div>
           </div>
         ))}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { askGemini } from '../config/gemini'; // Adjust path if needed
+import Suggestions from '../components/HospitalForecast/Suggestions'; 
 
 function HospitalBarChart({ data, label }) {
   if (!data) return null;
@@ -20,6 +22,8 @@ const HospitalResourcePage = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [stats, setStats] = useState(null);
+  const [aiSuggestions, setAiSuggestions] = useState(null);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [manualInputs, setManualInputs] = useState({
     icuBeds: '',
     oxygenTanks: '',
@@ -51,6 +55,20 @@ const HospitalResourcePage = () => {
       const data = await res.json();
       setChartData(data.chart);
       setStats(data.stats);
+
+      // Generate prompt for Gemini
+  const prompt = `Given these hospital stats: ${JSON.stringify(data.stats)}, generate actionable suggestions and critical alerts for hospital resource management with keys "oxygen_alert", "icu_alert", "medication_alert", "allocation_suggestion", "medication_suggestion", "capacity_suggestion", each containing a short actionable suggestion or alert. Respond in clear, concise bullet points. `;
+  try {
+    setSuggestionsLoading(true);
+    // Call Gemini API
+    const geminiResponse = await askGemini(prompt);
+    // You can split by lines or parse as needed
+    setAiSuggestions(geminiResponse.split('\n').filter(Boolean));
+  } catch {
+    setAiSuggestions(["Could not fetch AI suggestions."]);
+    setSuggestionsLoading(false);
+  }
+
       alert('File analyzed successfully!');
     } catch (error) {
       console.error('Error:', error);
@@ -182,71 +200,30 @@ const HospitalResourcePage = () => {
           </div>
         )}
 
-       // ...existing imports and code...
-
         {/* Resource Forecast Summary */}
-        {stats && (
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Resource Forecast Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">ICU Beds</h3>
               <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
-                {stats.icu_beds_used ?? 'N/A'}
+                 {stats && stats.icu_beds_used != null ? stats.icu_beds_used : 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Oxygen Supply</h3>
               <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
-                {stats.oxygen_used ?? 'N/A'}
+                 {stats && stats.oxygen_used != null ? stats.oxygen_used : 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Medications</h3>
               <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
-                {stats.medications_used ?? 'N/A'}
+                 {stats && stats.medications_used != null ? stats.medications_used : 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* Visualization Section */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Resource Demand vs Availability</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">ICU Bed Demand</h3>
-              <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                {stats?.icu_bed_demand ? (
-                  <HospitalBarChart data={stats.icu_bed_demand} label="ICU Bed Demand" />
-                ) : (
-                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
-                )}
-              </div>
-            </div>
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Oxygen Supply Demand</h3>
-              <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                {stats?.oxygen_demand ? (
-                  <HospitalBarChart data={stats.oxygen_demand} label="Oxygen Demand" />
-                ) : (
-                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
-                )}
-              </div>
-            </div>
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Medication Demand</h3>
-              <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                {stats?.medication_demand ? (
-                  <HospitalBarChart data={stats.medication_demand} label="Medication Demand" />
-                ) : (
-                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
-                )}
-              </div>
             </div>
           </div>
         </section>
@@ -259,6 +236,7 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ⚠️ Oxygen Supply Alert
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.alerts?.oxygen || 'Oxygen supply alert will be generated after analysis'}
               </p>
@@ -267,6 +245,7 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🔴 ICU Bed Alert
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.alerts?.icu || 'ICU bed alert will be generated after analysis'}
               </p>
@@ -275,6 +254,7 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ℹ️ Medication Alert
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.alerts?.medications || 'Medication alert will be generated after analysis'}
               </p>
@@ -290,6 +270,7 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 📋 Resource Allocation
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.suggestions?.allocation || 'Resource allocation suggestions will be generated after analysis'}
               </p>
@@ -298,6 +279,7 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 💊 Medication Management
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.suggestions?.medications || 'Medication management suggestions will be generated after analysis'}
               </p>
@@ -306,13 +288,14 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🏥 Capacity Planning
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                 {stats?.suggestions?.capacity || 'Capacity planning suggestions will be generated after analysis'}
               </p>
             </div>
           </div>
         </section>
-        
+
         <section className="flex justify-center mt-12">
           <Link
             to="/chatbot"

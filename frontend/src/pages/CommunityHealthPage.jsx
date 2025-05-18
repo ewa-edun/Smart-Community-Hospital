@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Charts from "../components/CommunityHealth/Charts";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { askGemini } from '../config/gemini'; // Adjust path if needed
+import Suggestions from '../components/HospitalForecast/Suggestions'; // or CommunityHealth/Suggestions
 
 function YourBarChartComponent({ data }) {
   // Convert object to array for recharts
@@ -25,7 +27,8 @@ const CommunityHealthPage = () => {
   const [chartData, setChartData] = useState(null);
   const [stats, setStats] = useState(null);
   const [insights, setInsights] = useState(null);
-
+  const [aiSuggestions, setAiSuggestions] = useState(null);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
 
   const handleFileChange = (e) =>  setUploadedFile(e.target.files[0]);
 
@@ -53,6 +56,20 @@ const CommunityHealthPage = () => {
        setChartData(data.chart);
        setStats(data.stats);
        setInsights(data.stats?.insights || null);
+
+       // Generate prompt for Gemini
+  const prompt = `Given these community health statistics: ${JSON.stringify(data.stats)}, generate actionable suggestions and critical alerts for improving community health outcomes. Focus on vaccination gaps, disease outbreaks, high-risk groups, and preventative recommendations. Respond in clear, concise bullet points.`;
+  try {
+    setSuggestionsLoading(true);
+    // Call Gemini API
+    const geminiResponse = await askGemini(prompt);
+    // You can split by lines or parse as needed
+    setAiSuggestions(geminiResponse.split('\n').filter(Boolean));
+  } catch {
+    setAiSuggestions(["Could not fetch AI suggestions."]);
+    setSuggestionsLoading(false);
+  }
+
       alert('File analyzed successfully!');
     } catch (error) {
       console.error('Error:', error);
@@ -217,6 +234,7 @@ const CommunityHealthPage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ⚠️ Disease Outbreaks
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                {insights?.disease_outbreaks || 'Preventative suggestions will be generated after analysis'}
               </p>
@@ -225,6 +243,7 @@ const CommunityHealthPage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🔴 High-Risk Groups
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
                {insights?.high_risk_groups || 'High-risk regions and groups will be identified after analysis'}
               </p>
@@ -233,6 +252,7 @@ const CommunityHealthPage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 💡 Recommendations
               </h3>
+              <Suggestions suggestions={aiSuggestions} loading={suggestionsLoading} />
               <p className="text-sm text-gray-600">
               {insights?.recommendations || 'Preventative suggestions will be generated after analysis'}
              </p>
