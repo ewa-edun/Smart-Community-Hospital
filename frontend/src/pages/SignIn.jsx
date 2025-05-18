@@ -60,46 +60,46 @@ const SignIn = () => {
           </div>
           <div>
             <label className="block text-[#2C6F85] mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
+        <input
+          type="email"
+          value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border-2 border-[#AACBDA] bg-white focus:outline-none focus:border-[#2C6F85] transition-colors"
-              required
-            />
+          required
+        />
           </div>
           <div>
             <label className="block text-[#2C6F85] mb-2">Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border-2 border-[#AACBDA] bg-white focus:outline-none focus:border-[#2C6F85] transition-colors"
-              required
-            />
+            required
+          />
             <label className="flex items-center mt-2 text-sm text-gray-600">
-              <input
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
                 className="mr-2 rounded border-[#AACBDA] text-[#2C6F85] focus:ring-[#2C6F85]"
-              />
-              Show Password
-            </label>
-          </div>
-          <button
-            type="submit"
+            />
+            Show Password
+          </label>
+        </div>
+        <button
+          type="submit"
             className="w-full bg-[#2C6F85] text-white py-3 rounded-xl hover:bg-[#1a4d5f] transition-colors font-medium"
-            disabled={loading}
-          >
-            {loading && (
+          disabled={loading}
+        >
+          {loading && (
               <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-              </svg>
-            )}
-            Sign Up
-          </button>
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+            </svg>
+          )}
+          Sign Up
+        </button>
         </form>
         <p className="mt-4 text-center text-[#2C6F85]">
           Already have an account?{" "}

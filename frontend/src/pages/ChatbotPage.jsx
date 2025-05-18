@@ -36,7 +36,7 @@ const ChatbotPage = () => {
         </h1>
         {/* Chat History */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" style={{ minHeight: 0 }}>
-          {messages.map((msg, idx) => (
+        {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`px-4 py-2 rounded-xl max-w-[80%] break-words text-base ${
@@ -50,40 +50,40 @@ const ChatbotPage = () => {
                   whiteSpace: "pre-wrap"
                 }}
               >
-                {msg.text}
-              </div>
+              {msg.text}
             </div>
-          ))}
-          {loading && (
+          </div>
+        ))}
+        {loading && (
             <div className="flex justify-start">
               <div className="px-4 py-2 rounded-xl bg-[#F5FAFE] border-2 border-[#AACBDA] text-[#2C6F85] flex items-center">
                 <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                </svg>
-                Thinking...
-              </div>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              Thinking...
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
         {/* Input Area */}
         <form onSubmit={handleSend} className="flex gap-3 p-4 border-t border-[#E0E8F0]">
-          <input
-            type="text"
+        <input
+          type="text"
             className="flex-1 px-4 py-3 rounded-xl border-2 border-[#AACBDA] bg-white focus:outline-none focus:border-[#2C6F85] transition-colors"
-            placeholder="Type your message..."
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            disabled={loading}
-          />
-          <button
-            type="submit"
+          placeholder="Type your message..."
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          disabled={loading}
+        />
+        <button
+          type="submit"
             className="bg-[#2C6F85] text-white px-6 py-3 rounded-xl hover:bg-[#1a4d5f] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading || !input.trim()}
-          >
-            Send
-          </button>
-        </form>
+          disabled={loading || !input.trim()}
+        >
+          Send
+        </button>
+      </form>
       </div>
     </div>
   );

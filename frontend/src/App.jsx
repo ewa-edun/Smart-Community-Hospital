@@ -12,16 +12,18 @@ import ChatbotButton from "./components/ChatbotButton";
 function App() {
   return (
     <Router>
-      <div>
+      <div className="min-h-screen">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/community-health" element={<CommunityHealthPage />} />
-          <Route path="/hospital-forecast" element={<HospitalResourcePage />} />
-          <Route path="/chatbot" element={<ChatbotPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignIn />} />
-        </Routes>
+        <main className="pt-20">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/community-health" element={<CommunityHealthPage />} />
+            <Route path="/hospital-forecast" element={<HospitalResourcePage />} />
+            <Route path="/chatbot" element={<ChatbotPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignIn />} />
+          </Routes>
+        </main>
         <ChatbotButton />
       </div>
     </Router>

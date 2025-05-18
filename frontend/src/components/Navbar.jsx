@@ -1,17 +1,43 @@
 // src/components/Navbar.jsx
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebase';
+import { signOut } from 'firebase/auth';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const isActive = (path) => {
     return location.pathname === path;
   };
 
+  const handleLinkClick = (path) => {
+    setIsMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <nav className="bg-[#DAEEF8] shadow-md h-24">
+    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           {/* Logo */}
@@ -67,18 +93,29 @@ const Navbar = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="bg-[#306F84] text-white hover:bg-[#2C6F85] px-6 py-2 rounded-md text-lg font-medium transition-colors"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="bg-[#306F84] text-white hover:bg-[#2C6F85] px-6 py-2 rounded-md text-lg font-medium transition-colors"
-            >
-              Sign Up
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="bg-[#306F84] text-white hover:bg-[#2C6F85] px-6 py-2 rounded-md text-lg font-medium transition-colors"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="bg-[#306F84] text-white hover:bg-[#2C6F85] px-6 py-2 rounded-md text-lg font-medium transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-[#306F84] text-white hover:bg-[#2C6F85] px-6 py-2 rounded-md text-lg font-medium transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -126,63 +163,74 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden bg-white shadow-lg">
           <div className="pt-2 pb-3 space-y-1">
-            <Link
-              to="/"
-              className={`block pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
+            <button
+              onClick={() => handleLinkClick('/')}
+              className={`block w-full text-left pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
                 isActive('/')
-                  ? 'border-[#2C6F85] text-[#2C6F85] bg-[#DAEEF8]'
-                  : 'border-transparent text-gray-500 hover:bg-[#DAEEF8] hover:border-[#2C6F85] hover:text-[#2C6F85]'
+                  ? 'border-[#2C6F85] text-[#2C6F85] bg-gray-50'
+                  : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-[#2C6F85] hover:text-[#2C6F85]'
               }`}
             >
               Home
-            </Link>
-            <Link
-              to="/community-health"
-              className={`block pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
+            </button>
+            <button
+              onClick={() => handleLinkClick('/community-health')}
+              className={`block w-full text-left pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
                 isActive('/community-health')
-                  ? 'border-[#2C6F85] text-[#2C6F85] bg-[#DAEEF8]'
-                  : 'border-transparent text-gray-500 hover:bg-[#DAEEF8] hover:border-[#2C6F85] hover:text-[#2C6F85]'
+                  ? 'border-[#2C6F85] text-[#2C6F85] bg-gray-50'
+                  : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-[#2C6F85] hover:text-[#2C6F85]'
               }`}
             >
               Community Health
-            </Link>
-            <Link
-              to="/hospital-forecast"
-              className={`block pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
+            </button>
+            <button
+              onClick={() => handleLinkClick('/hospital-forecast')}
+              className={`block w-full text-left pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
                 isActive('/hospital-forecast')
-                  ? 'border-[#2C6F85] text-[#2C6F85] bg-[#DAEEF8]'
-                  : 'border-transparent text-gray-500 hover:bg-[#DAEEF8] hover:border-[#2C6F85] hover:text-[#2C6F85]'
+                  ? 'border-[#2C6F85] text-[#2C6F85] bg-gray-50'
+                  : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-[#2C6F85] hover:text-[#2C6F85]'
               }`}
             >
               Hospital Resource
-            </Link>
-            <Link
-              to="/chatbot"
-              className={`block pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
+            </button>
+            <button
+              onClick={() => handleLinkClick('/chatbot')}
+              className={`block w-full text-left pl-3 pr-4 py-4 border-l-4 text-xl font-medium ${
                 isActive('/chatbot')
-                  ? 'border-[#2C6F85] text-[#2C6F85] bg-[#DAEEF8]'
-                  : 'border-transparent text-gray-500 hover:bg-[#DAEEF8] hover:border-[#2C6F85] hover:text-[#2C6F85]'
+                  ? 'border-[#2C6F85] text-[#2C6F85] bg-gray-50'
+                  : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-[#2C6F85] hover:text-[#2C6F85]'
               }`}
             >
               Chatbot
-            </Link>
+            </button>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="space-y-1">
-              <Link
-                to="/login"
-                className="block pl-3 pr-4 py-4 border-l-4 border-transparent text-xl font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="block pl-3 pr-4 py-4 border-l-4 border-transparent text-xl font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
-              >
-                Sign Up
-              </Link>
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left pl-3 pr-4 py-4 border-l-4 border-transparent text-xl font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => handleLinkClick('/login')}
+                    className="block w-full text-left pl-3 pr-4 py-4 border-l-4 border-transparent text-xl font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => handleLinkClick('/signup')}
+                    className="block w-full text-left pl-3 pr-4 py-4 border-l-4 border-transparent text-xl font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

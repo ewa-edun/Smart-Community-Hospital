@@ -164,7 +164,7 @@ const LandingPage = () => {
         </div>
 
         {/* Features Section */}
-        <div className="bg-[#F5FAFE] border-2 border-[#AACBDA] rounded-2xl p-12 shadow-lg max-w-6xl mx-auto mb-16">
+        <div className="bg-[#F5FAFE] border-2 border-[#AACBDA] rounded-2xl p-12 shadow-lg max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-[#2C6F85] mb-12 text-center">Key Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex items-start space-x-6">
@@ -259,24 +259,6 @@ const LandingPage = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Auth Buttons */}
-        <div className="mt-16 text-center">
-          <div className="flex justify-center gap-4">
-            <Link
-              to="/login"
-              className="px-8 py-3 text-lg text-[#2C6F85] hover:text-[#1a4d5f] font-medium"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-8 py-3 bg-[#2C6F85] text-white rounded-xl hover:bg-[#1a4d5f] text-lg font-medium transition-colors"
-            >
-              Sign Up
-            </Link>
           </div>
         </div>
       </div>
