@@ -17,7 +17,6 @@ const ChatbotButton = () => {
           className={`fixed bottom-8 right-8 z-50 w-16 h-16 bg-[#306F84] hover:bg-[#2C6F85] rounded-full flex items-center justify-center shadow-xl transition-all duration-300 focus:outline-none`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => window.location.href = '/chatbot'}
         >
           <svg
             className="w-7 h-7 text-white"
