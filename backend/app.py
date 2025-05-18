@@ -61,7 +61,10 @@ def analyze():
                     'high_risk_groups': "None identified",
                     'recommendations': "Increase awareness in Zone A"
                 },
-                'report_path': report_path
+             'vaccination_gaps': {'yes': 7, 'no': 5},
+             'nutrition_issues': {'underweight': 3, 'normal': 8, 'overweight': 1},
+             'disease_trends': {'malaria': 6, 'typhoid': 4, 'cholera': 2},
+             'report_path': report_path
                 }, 
             })
         else:

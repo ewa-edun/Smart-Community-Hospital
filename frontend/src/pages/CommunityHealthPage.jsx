@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Charts from "../components/CommunityHealth/Charts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+
+function YourBarChartComponent({ data }) {
+  // Convert object to array for recharts
+  const chartData = Object.entries(data).map(([key, value]) => ({ name: key, value }));
+
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={chartData}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="value" fill="#3182ce" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
 
 const CommunityHealthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -158,9 +175,10 @@ const CommunityHealthPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Vaccination Gaps</h3>
-              <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
+              <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">     
+               {chartData && <Charts chartData={chartData} />}
                 {chartData?.vaccination_gaps ? (
-               <YourBarChartComponent data={chartData.vaccination_gaps} />
+                  <YourBarChartComponent data={chartData.vaccination_gaps} />
                ) : (
                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
                 )}
@@ -169,6 +187,7 @@ const CommunityHealthPage = () => {
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Nutrition Issues</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
+               {chartData && <Charts chartData={chartData} />}
                 {chartData?.nutrition_issues ? (
                 <YourBarChartComponent data={chartData.nutrition_issues} />
                   ) : (
@@ -179,6 +198,7 @@ const CommunityHealthPage = () => {
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Disease Trends</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
+                {chartData && <Charts chartData={chartData} />}
                 {chartData?.disease_trends ? (
                  <YourBarChartComponent data={chartData.disease_trends} />
                  ) : (

@@ -118,10 +118,12 @@ Each includes dummy but realistic entries so you can demo predictions instantly.
      https://github.com/ewa-edun/Smart-Community-Hospital.git 
    ```
 
+
+#### Frontend
+
 2. Change directories
   ```bash
-   cd Smart-Community-Hospital
-   cd frontend
+   cd Smart-Community-Hospital/frontend
    ```
 
 3. Put your .env file in the frontend folder
@@ -144,6 +146,7 @@ VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
   npm install react-router-dom
   npm install @google/generative-ai
   npm install firebase
+  npm install recharts
 ```
 
 5. Open the development server
@@ -151,3 +154,22 @@ VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
     npm run dev
 ```
   This will open in [localhost:5173](http://localhost:5173/)
+
+#### Backend
+2. Change directories
+  ```bash
+   cd Smart-Community-Hospital/backend
+   ```
+  
+3. Install dependencies
+
+```bash  
+  pip install flask pandas matplotlib seaborn pandasql
+  pip install flask-cors
+  pip install openpyxl
+```
+
+4. Open the development server
+```bash
+    python app.py
+```
