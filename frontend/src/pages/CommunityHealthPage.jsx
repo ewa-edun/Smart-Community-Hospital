@@ -5,34 +5,49 @@ import Charts from "../components/CommunityHealth/Charts";
 const CommunityHealthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [file, setFile] = useState(null);
+  const [setFile] = useState(null);
   const [chartData, setChartData] = useState(null);
-
+  const [stats, setStats] = useState(null);
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
-
-  const handleFileUpload = (event) => {
+ const handleUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      setUploadedFile(file);
-      setIsLoading(true);
-      // Simulate loading
-      setTimeout(() => setIsLoading(false), 2000);
+    if (!file) return;
+    setUploadedFile(file);
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("http://localhost:5000/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Analysis failed');
+      }
+
+      const data = await res.json();
+      setChartData(data.chart);
+      setStats(data.stats);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error analyzing file: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-   const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file) return;
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("http://localhost:5000/analyze", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    setChartData(data.chart);
-  };
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = 'http://localhost:5000/download/analysis_report.xlsx';
+    link.setAttribute('download', 'analysis_report.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#DBEEF8] to-[#FFFFFF]">
@@ -46,14 +61,14 @@ const CommunityHealthPage = () => {
             <input
               type="file"
               accept=".csv,.xlsx,.xls"
-              onChange={handleFileUpload}
+              onChange={handleUpload}
               className="hidden"
               id="file-upload"
             />
 
  <div>
       <form onSubmit={handleUpload} className="mb-4">
-        <input type="file" accept=".csv" onChange={handleFileChange} />
+        <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileChange} />
         <br></br>
         <br></br>
 
@@ -64,8 +79,19 @@ const CommunityHealthPage = () => {
               {uploadedFile ? uploadedFile.name : 'Choose CSV or Excel file'}
             </label>
       </form>
-      <Charts chartData={chartData} />
-    </div>
+        <Charts chartData={chartData} />
+
+        {/* Download Section */}
+              <div className="mt-6">
+                <button
+                  onClick={handleDownload}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Download Analysis Report
+                </button>
+              </div>
+            </div>
+
 
             <p className="mt-4 text-sm text-gray-600">
               Upload survey data with columns like age, location, disease, vaccination status, etc.
@@ -74,34 +100,34 @@ const CommunityHealthPage = () => {
           </div>
         </section>
 
-        {/* Summary Stats */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Summary Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Total Records</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Data will be displayed after analysis
-              </div>
+       {/* Updated Summary Stats section */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Summary Statistics</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Total Records</h3>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              {stats ? (
+                <span className="text-lg font-bold text-blue-700">{stats.total_records}</span>
+              ) : (
+                <span className="text-sm text-gray-600">Data will be displayed after analysis</span>
+              )}
             </div>
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Regions Covered</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Data will be displayed after analysis
-              </div>
+          </div>
+          
+          <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">% Vaccinated</h3>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              {stats ? (
+                <span className="text-lg font-bold text-blue-700">
+                  {stats.vaccination_rate ? stats.vaccination_rate.toFixed(1) + '%' : 'N/A'}
+                </span>
+              ) : (
+                <span className="text-sm text-gray-600">Data will be displayed after analysis</span>
+              )}
             </div>
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Age Group Range</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Data will be displayed after analysis
-              </div>
-            </div>
-            <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">% Vaccinated</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Data will be displayed after analysis
-              </div>
-            </div>
+          </div>
+
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Top Health Issues</h3>
               <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
