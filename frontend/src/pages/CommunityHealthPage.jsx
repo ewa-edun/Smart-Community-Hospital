@@ -125,7 +125,7 @@ const CommunityHealthPage = () => {
             {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
 
             <p className="mt-4 text-sm text-gray-600">
-              Upload survey data with columns age, gender, location,health_issue, vaccination_status, symptoms, access_to_hospital, hospital_visits_last_year.
+              Upload survey data with columns age, gender, location, disease, vaccination_status, symptoms, access_to_hospital, hospital_visits_last_year.
             </p>
               {/* Charts */}
         {chartData && <Charts chartData={chartData} />}

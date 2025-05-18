@@ -1,4 +1,4 @@
-age,gender,location,health_issue,vaccination_status,symptoms,access_to_hospital,hospital_visits_last_year
+age,gender,location,disease,vaccination_status,symptoms,access_to_hospital,hospital_visits_last_year
 34,F,Ibadan,Malaria,Yes,Fever;Chills,Yes,2
 22,M,Lagos,Typhoid,No,Fever;Headache,No,0
 45,F,Abuja,Cholera,Yes,Vomiting;Diarrhea,Yes,3
