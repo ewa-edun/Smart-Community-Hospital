@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
 import CommunityHealthPage from "./pages/CommunityHealthPage";
@@ -24,7 +24,7 @@ function App() {
             <Route path="/signup" element={<SignIn />} />
           </Routes>
         </main>
-            <Route path="/chatbot" element={<ChatbotButton />} />
+            <Link to="/chatbot" element={<ChatbotButton />} />
       </div>
     </Router>
   );
