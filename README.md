@@ -157,7 +157,6 @@ VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
 
 ## 📍 Future Improvements
 
-* User authentication
 * Save session history
 * Geo-tagged insights
 * Community leaderboard for outreach impact
