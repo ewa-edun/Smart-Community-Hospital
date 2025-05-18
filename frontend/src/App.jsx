@@ -24,7 +24,7 @@ function App() {
             <Route path="/signup" element={<SignIn />} />
           </Routes>
         </main>
-            <Link to="/chatbot" element={<ChatbotButton />} />
+            {<ChatbotButton />}
       </div>
     </Router>
   );
