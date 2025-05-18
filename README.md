@@ -111,7 +111,43 @@ Each includes dummy but realistic entries so you can demo predictions instantly.
 > **“One Dashboard. Two Lives Saved.”**
 > Community. Hospital. One solution.
 
-### Installs
+### How to run it locally
 
-npm install @google/generative-ai
-npm install firebase
+1. Clone the repository
+ ``` bash
+     https://github.com/ewa-edun/Smart-Community-Hospital.git 
+   ```
+
+2. Change directories
+  ```bash
+   cd Smart-Community-Hospital
+   cd frontend
+   ```
+
+3. Put your .env file in the frontend folder
+
+```bash
+VITE_GEMINI_API_KEY=your-gemini-api-key
+VITE_FIREBASE_API_KEY=your-firebase-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
+VITE_FIREBASE_PROJECT_ID=your-firebase-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender
+VITE_FIREBASE_APP_ID=your-firebase-app-id
+VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
+```
+
+4. Install the necessary dependencies
+
+```bash  
+  npm install
+  npm install react-router-dom
+  npm install @google/generative-ai
+  npm install firebase
+```
+
+5. Open the development server
+```bash
+    npm run dev
+```
+  This will open in [localhost:5173](http://localhost:5173/)
