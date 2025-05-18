@@ -32,13 +32,10 @@ Upload health survey or hospital usage data to get real-time analytics and plain
 🔹 **Data Visualization**
 Interactive charts and graphs help make trends obvious — even for non-technical users.
 
-🔹 **Machine Learning Forecasts**
-Hospital data is analyzed with lightweight ML models to forecast upcoming needs.
-
 🔹 **Smart CTA Flow**
 Finished one module? Get nudged to check out the other, building full-picture preparedness.
 
-🔹 **AI Chatbot (Stretch Goal)**
+🔹 **AI Chatbot**
 Ask follow-up questions or get emergency recommendations from a Gemini-powered chatbot.
 
 ---
@@ -58,7 +55,7 @@ Ask follow-up questions or get emergency recommendations from a Gemini-powered c
 
 #### 🤖 Step 3: Get Support
 
-* Chat with an AI assistant for recommendations (stretch goal)
+* Chat with an AI assistant for recommendations.
 
 ---
 
@@ -67,49 +64,31 @@ Ask follow-up questions or get emergency recommendations from a Gemini-powered c
 | Area               | Tool                                  |
 | ------------------ | ------------------------------------- |
 | Frontend           | React.js, Tailwind CSS                |
-| Data Visualization | Chart.js / Recharts                   |
-| ML Model           | Scikit-learn (Regressor)              |
-| Data Handling      | Pandas, Numpy                         |
+| Data Visualization | Matplotlib/ Recharts                  |
+| Data Handling      | Pandas, Numpy, Jupyter Notebook       |
 | AI Assistant       | Gemini API                            |
-| Hosting            | Vercel / Replit / Hugging Face Spaces |
+| Hosting            | Vercel                                |
 
 ---
 
 ## 👥 Team Roles
 
-| Name      | Role                                                 |
-| --------  | ---------------------------------------------------- |
-| **Tanya** | Frontend Design & UX Flow                            |
-| **Ishan** | Data Cleaning & Visualizations                       |
-| **Ewa**   | Machine Learning, Firebase, & AI Chatbot Integration |
+| Name      | Role                                       |
+| --------  | ------------------------------------------ |
+| **Tanya** | Frontend Design & UX Flow                  |
+| **Ishan** | Data Cleaning, Handling, Visualizations    |
+| **Ewa**   | Backend, Firebase, & Gemini AI Integration |
 
 ---
 
 ## 🧪 Example Datasets
 
-We’ve included sample CSVs to test both modules:
+We’ve included sample CSVs to test both modules located in the datasets folder:
 
-* `community_data_sample.csv`
-* `hospital_usage_sample.csv`
+* `mock_community_data.csv`
+* `mock_hospital_data.csv`
 
 Each includes dummy but realistic entries so you can demo predictions instantly.
-
----
-
-## 📍 Future Improvements
-
-* User authentication
-* Save session history
-* Geo-tagged insights
-* Community leaderboard for outreach impact
-* Offline-first PWA version
-
----
-
-## 💬 Tagline
-
-> **“One Dashboard. Two Lives Saved.”**
-> Community. Hospital. One solution.
 
 ### How to run it locally
 
@@ -117,7 +96,6 @@ Each includes dummy but realistic entries so you can demo predictions instantly.
  ``` bash
      https://github.com/ewa-edun/Smart-Community-Hospital.git 
    ```
-
 
 #### Frontend
 
@@ -173,3 +151,21 @@ VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
 ```bash
     python app.py
 ```
+
+
+---
+
+## 📍 Future Improvements
+
+* User authentication
+* Save session history
+* Geo-tagged insights
+* Community leaderboard for outreach impact
+* Offline-first PWA version
+
+---
+
+## 💬 Tagline
+
+> **“One Dashboard. Two Lives Saved.”**
+> Community. Hospital. One solution.

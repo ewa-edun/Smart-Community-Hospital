@@ -1,0 +1,30 @@
+age,gender,location,health_issue,vaccination_status,symptoms,access_to_hospital,hospital_visits_last_year
+34,F,Ibadan,Malaria,Yes,Fever;Chills,Yes,2
+22,M,Lagos,Typhoid,No,Fever;Headache,No,0
+45,F,Abuja,Cholera,Yes,Vomiting;Diarrhea,Yes,3
+29,M,Kano,Malaria,No,Fever;Sweating,Yes,1
+63,F,Enugu,None,Yes,None,Yes,0
+18,M,Lagos,Typhoid,Yes,Abdominal Pain;Fever,No,1
+38,F,Kaduna,Malaria,Yes,Fever;Fatigue,Yes,2
+55,M,Port Harcourt,None,No,None,No,0
+41,F,Ibadan,Cholera,Yes,Diarrhea;Vomiting,Yes,2
+27,M,Lagos,Malaria,No,Fever;Chills,No,1
+50,F,Abuja,Typhoid,Yes,Fever;Headache,Yes,3
+30,M,Kano,Cholera,No,Vomiting;Diarrhea,Yes,1
+44,F,Ibadan,Malaria,Yes,Fever;Headache,Yes,2
+23,M,Lagos,Typhoid,No,Fever;Cough,No,0
+36,F,Abuja,None,Yes,None,Yes,0
+59,M,Enugu,Malaria,Yes,Fever;Sweating,Yes,1
+19,F,Kaduna,Typhoid,No,Fever;Vomiting,No,1
+32,M,Lagos,Malaria,Yes,Fever;Fatigue,Yes,2
+46,F,Port Harcourt,Cholera,No,Diarrhea;Cramps,Yes,2
+61,M,Ibadan,None,Yes,None,No,0
+40,F,Abuja,Malaria,Yes,Fever;Chills,Yes,3
+21,M,Kano,Typhoid,Yes,Fever;Stomach Pain,No,1
+33,F,Lagos,Malaria,Yes,Fever;Fatigue,Yes,1
+57,M,Enugu,Cholera,No,Diarrhea;Vomiting,Yes,2
+35,F,Kaduna,None,Yes,None,Yes,0
+43,M,Ibadan,Malaria,No,Fever;Cough,Yes,2
+28,F,Lagos,Typhoid,Yes,Fever;Headache,No,1
+39,M,Abuja,Cholera,No,Vomiting;Diarrhea,Yes,3
+24,F,Kano,Malaria,Yes,Fever;Sweating,No,0
