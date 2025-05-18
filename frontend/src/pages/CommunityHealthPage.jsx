@@ -193,33 +193,30 @@ const CommunityHealthPage = () => {
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Vaccination Gaps</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">     
-               {chartData && <Charts chartData={chartData} />}
-                {chartData?.vaccination_gaps ? (
-                  <YourBarChartComponent data={chartData.vaccination_gaps} />
-               ) : (
-               <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.vaccination_gaps ? (
+                  <YourBarChartComponent data={stats.vaccination_gaps} />
+                ) : (
+                  <p className="text-sm text-gray-600">No vaccination data available</p>
                 )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Nutrition Issues</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-               {chartData && <Charts chartData={chartData} />}
-                {chartData?.nutrition_issues ? (
-                <YourBarChartComponent data={chartData.nutrition_issues} />
-                  ) : (
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.nutrition_issues ? (
+                  <YourBarChartComponent data={stats.nutrition_issues} />
+                ) : (
+                  <p className="text-sm text-gray-600">No nutrition data available</p>
                 )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Disease Trends</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                {chartData && <Charts chartData={chartData} />}
-                {chartData?.disease_trends ? (
-                 <YourBarChartComponent data={chartData.disease_trends} />
-                 ) : (
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.disease_trends ? (
+                  <YourBarChartComponent data={stats.disease_trends} />
+                ) : (
+                  <p className="text-sm text-gray-600">No disease trend data available</p>
                 )}
               </div>
             </div>
