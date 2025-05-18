@@ -24,7 +24,7 @@ const HospitalResourcePage = () => {
   const [stats, setStats] = useState(null);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
-  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "http://localhost:5000";
+  const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5000";
   const [manualInputs, setManualInputs] = useState({
     icuBeds: '',
     oxygenTanks: '',
