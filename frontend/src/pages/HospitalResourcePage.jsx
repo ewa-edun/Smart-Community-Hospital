@@ -1,26 +1,75 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+function HospitalBarChart({ data, label }) {
+  if (!data) return null;
+  const chartData = Object.entries(data).map(([key, value]) => ({ name: key, value }));
+  return (
+    <div className="my-4">
+      <h4 className="font-semibold mb-2">{label}</h4>
+      <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
+        {/* You can use recharts or any chart lib here */}
+        <pre>{JSON.stringify(chartData, null, 2)}</pre>
+      </div>
+    </div>
+  );
+}
+
 const HospitalResourcePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [chartData, setChartData] = useState(null);
+  const [stats, setStats] = useState(null);
   const [manualInputs, setManualInputs] = useState({
     icuBeds: '',
     oxygenTanks: '',
     medications: ''
   });
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadedFile(file);
-      setIsLoading(true);
-      // Simulate loading
-      setTimeout(() => setIsLoading(false), 2000);
+  const handleFileChange = (e) => setUploadedFile(e.target.files[0]);
+
+  const handleUpload = async () => {
+    if (!uploadedFile) {
+      alert('Please select a file first.');
+      return;
+    }
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", uploadedFile);
+
+      const res = await fetch("http://localhost:5000/hospital-analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Analysis failed');
+      }
+
+      const data = await res.json();
+      setChartData(data.chart);
+      setStats(data.stats);
+      alert('File analyzed successfully!');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error analyzing file: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleManualInputChange = (e) => {
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = 'http://localhost:5000/download/hospital_analysis_report.xlsx';
+    link.setAttribute('download', 'hospital_analysis_report.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  
+ const handleManualInputChange = (e) => {
     const { name, value } = e.target;
     setManualInputs(prev => ({
       ...prev,
@@ -33,7 +82,7 @@ const HospitalResourcePage = () => {
       <div className="max-w-7xl mx-auto px-8 py-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Hospital Resource Forecast</h1>
 
-        {/* Data Input Section */}
+            {/* Data Input Section */}
         <section className="bg-[#F5FAFE] rounded-xl p-8 mb-8 shadow-md">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Resource Data Input</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -42,7 +91,7 @@ const HospitalResourcePage = () => {
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
-                onChange={handleFileUpload}
+                onChange={handleFileChange}
                 className="hidden"
                 id="file-upload"
               />
@@ -52,10 +101,27 @@ const HospitalResourcePage = () => {
               >
                 {uploadedFile ? uploadedFile.name : 'Choose CSV or Excel file'}
               </label>
-              <p className="mt-4 text-sm text-gray-600">
+            <div className="mt-4">
+              <button
+                onClick={handleUpload}
+                disabled={isLoading || !uploadedFile}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Analyzing...' : 'Upload & Analyze'}
+              </button>
+               <p className="mt-4 text-sm text-gray-600">
                 Upload hospital usage logs with resource consumption data
               </p>
-              {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
+            </div>
+            {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
+            <div className="mt-6">
+              <button
+                onClick={handleDownload}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Download Analysis Report
+              </button>
+            </div>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-8">
@@ -108,33 +174,45 @@ const HospitalResourcePage = () => {
           </div>
         </section>
 
-        {/* Resource Summary */}
+        {/* Show chart and stats */}
+        {chartData && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">ICU Bed Usage Chart</h2>
+            <img src={`data:image/png;base64,${chartData}`} alt="ICU Bed Usage Chart" className="border rounded shadow mx-auto" />
+          </div>
+        )}
+
+       // ...existing imports and code...
+
+        {/* Resource Forecast Summary */}
+        {stats && (
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Resource Forecast Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">ICU Beds</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Forecast will be generated after analysis
+              <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
+                {stats.icu_beds_used ?? 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Oxygen Supply</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Forecast will be generated after analysis
+              <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
+                {stats.oxygen_used ?? 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Medications</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Forecast will be generated after analysis
+              <div className="bg-blue-50 rounded-lg p-4 text-center text-lg text-blue-700">
+                {stats.medications_used ?? 'N/A'}
               </div>
               <p className="mt-2 text-sm text-gray-500">Forecast for next 7 days</p>
             </div>
           </div>
         </section>
+        )}
 
         {/* Visualization Section */}
         <section className="mb-8">
@@ -143,19 +221,31 @@ const HospitalResourcePage = () => {
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">ICU Bed Demand</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.icu_bed_demand ? (
+                  <HospitalBarChart data={stats.icu_bed_demand} label="ICU Bed Demand" />
+                ) : (
+                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Oxygen Supply Demand</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.oxygen_demand ? (
+                  <HospitalBarChart data={stats.oxygen_demand} label="Oxygen Demand" />
+                ) : (
+                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Medication Demand</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {stats?.medication_demand ? (
+                  <HospitalBarChart data={stats.medication_demand} label="Medication Demand" />
+                ) : (
+                  <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
           </div>
@@ -169,19 +259,25 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ⚠️ Oxygen Supply Alert
               </h3>
-              <p className="text-sm text-gray-600">Oxygen supply may run out in 3 days</p>
+              <p className="text-sm text-gray-600">
+                {stats?.alerts?.oxygen || 'Oxygen supply alert will be generated after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md border-l-4 border-red-500">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🔴 ICU Bed Alert
               </h3>
-              <p className="text-sm text-gray-600">Prepare 10 more ICU beds</p>
+              <p className="text-sm text-gray-600">
+                {stats?.alerts?.icu || 'ICU bed alert will be generated after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md border-l-4 border-blue-500">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ℹ️ Medication Alert
               </h3>
-              <p className="text-sm text-gray-600">Critical medication stock running low</p>
+              <p className="text-sm text-gray-600">
+                {stats?.alerts?.medications || 'Medication alert will be generated after analysis'}
+              </p>
             </div>
           </div>
         </section>
@@ -194,24 +290,29 @@ const HospitalResourcePage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 📋 Resource Allocation
               </h3>
-              <p className="text-sm text-gray-600">Allocate more ICU beds in Zone Y</p>
+              <p className="text-sm text-gray-600">
+                {stats?.suggestions?.allocation || 'Resource allocation suggestions will be generated after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 💊 Medication Management
               </h3>
-              <p className="text-sm text-gray-600">Request additional meds A and B</p>
+              <p className="text-sm text-gray-600">
+                {stats?.suggestions?.medications || 'Medication management suggestions will be generated after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🏥 Capacity Planning
               </h3>
-              <p className="text-sm text-gray-600">Prepare for increased patient load in Emergency Department</p>
+              <p className="text-sm text-gray-600">
+                {stats?.suggestions?.capacity || 'Capacity planning suggestions will be generated after analysis'}
+              </p>
             </div>
           </div>
         </section>
-
-        {/* Call to Action */}
+        
         <section className="flex justify-center mt-12">
           <Link
             to="/chatbot"
