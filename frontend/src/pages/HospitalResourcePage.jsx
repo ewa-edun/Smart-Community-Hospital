@@ -24,6 +24,7 @@ const HospitalResourcePage = () => {
   const [stats, setStats] = useState(null);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "http://localhost:5000";
   const [manualInputs, setManualInputs] = useState({
     icuBeds: '',
     oxygenTanks: '',
@@ -43,7 +44,7 @@ const HospitalResourcePage = () => {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const res = await fetch("http://localhost:5000/hospital-analyze", {
+      const res = await fetch(`${BACKEND_URL}/hospital-analyze`, {
         method: "POST",
         body: formData,
       });
@@ -80,7 +81,7 @@ const HospitalResourcePage = () => {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = 'http://localhost:5000/download/hospital_analysis_report.xlsx';
+    link.href = `${BACKEND_URL}/download/hospital_analysis_report.xlsx`;
     link.setAttribute('download', 'hospital_analysis_report.xlsx');
     document.body.appendChild(link);
     link.click();

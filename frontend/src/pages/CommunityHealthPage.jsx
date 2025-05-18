@@ -29,6 +29,7 @@ const CommunityHealthPage = () => {
   const [insights, setInsights] = useState(null);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "http://localhost:5000";
 
   const handleFileChange = (e) =>  setUploadedFile(e.target.files[0]);
 
@@ -43,7 +44,7 @@ const CommunityHealthPage = () => {
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
-      const res = await fetch("http://localhost:5000/analyze", {
+      const res = await fetch(`${BACKEND_URL}/analyze`, {
         method: "POST",
         body: formData,
       });
@@ -81,7 +82,7 @@ const CommunityHealthPage = () => {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = 'http://localhost:5000/download/analysis_report.xlsx';
+    link.href = `${BACKEND_URL}/download/analysis_report.xlsx`;
     link.setAttribute('download', 'analysis_report.xlsx');
     document.body.appendChild(link);
     link.click();
