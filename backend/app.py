@@ -54,8 +54,15 @@ def analyze():
                 'chart': chart_data,
                 'stats': {
                     'total_records': len(df),
-                    'vaccination_rate': vaccinated.get('yes', 0) / len(df) * 100
-                }
+                    'vaccination_rate': vaccinated.get('yes', 0) / len(df) * 100,
+                'top_health_issues': df['health_issue'].value_counts().head(5).to_dict(),
+                'insights': {
+                    'disease_outbreaks': "No significant outbreaks detected",
+                    'high_risk_groups': "None identified",
+                    'recommendations': "Increase awareness in Zone A"
+                },
+                'report_path': report_path
+                }, 
             })
         else:
             return jsonify({'error': 'CSV format not recognized'}), 400

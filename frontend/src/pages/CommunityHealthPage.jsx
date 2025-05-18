@@ -7,6 +7,8 @@ const CommunityHealthPage = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [stats, setStats] = useState(null);
+  const [insights, setInsights] = useState(null);
+
 
   const handleFileChange = (e) =>  setUploadedFile(e.target.files[0]);
 
@@ -31,8 +33,10 @@ const CommunityHealthPage = () => {
       }
 
       const data = await res.json();
-      setChartData(data.chart);
-      setStats(data.stats);
+       setChartData(data.chart);
+       setStats(data.stats);
+       setInsights(data.stats?.insights || null);
+      alert('File analyzed successfully!');
     } catch (error) {
       console.error('Error:', error);
       alert('Error analyzing file: ' + error.message);
@@ -104,8 +108,6 @@ const CommunityHealthPage = () => {
           </div>
         </section>
 
-        
-
 
        {/* Updated Summary Stats section */}
       <section className="mb-8">
@@ -137,10 +139,16 @@ const CommunityHealthPage = () => {
 
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Top Health Issues</h3>
-              <div className="bg-blue-50 rounded-lg p-4 text-center text-sm text-gray-600">
-                Data will be displayed after analysis
-              </div>
-            </div>
+              <div className="bg-blue-50 rounded-lg p-4 text-center">
+                {insights ? (
+                  <span className="text-lg font-bold text-blue-700">
+                    {insights.disease_outbreaks || 'N/A'}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-600">Data will be displayed after analysis</span>
+                )}
+             </div>
+           </div>
           </div>
         </section>
 
@@ -151,19 +159,31 @@ const CommunityHealthPage = () => {
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Vaccination Gaps</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                {chartData?.vaccination_gaps ? (
+               <YourBarChartComponent data={chartData.vaccination_gaps} />
+               ) : (
+               <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Nutrition Issues</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Pie chart will be generated after analysis</p>
+                {chartData?.nutrition_issues ? (
+                <YourBarChartComponent data={chartData.nutrition_issues} />
+                  ) : (
+                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Disease Trends</h3>
               <div className="h-[300px] bg-blue-50 rounded-lg flex items-center justify-center">
-                <p className="text-sm text-gray-600">Line chart will be generated after analysis</p>
+                {chartData?.disease_trends ? (
+                 <YourBarChartComponent data={chartData.disease_trends} />
+                 ) : (
+                <p className="text-sm text-gray-600">Bar chart will be generated after analysis</p>
+                )}
               </div>
             </div>
           </div>
@@ -177,19 +197,25 @@ const CommunityHealthPage = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 ⚠️ Disease Outbreaks
               </h3>
-              <p className="text-sm text-gray-600">Potential outbreaks will be identified after analysis</p>
+              <p className="text-sm text-gray-600">
+               {insights?.disease_outbreaks || 'Preventative suggestions will be generated after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md border-l-4 border-red-500">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 🔴 High-Risk Groups
               </h3>
-              <p className="text-sm text-gray-600">High-risk regions and groups will be identified after analysis</p>
+              <p className="text-sm text-gray-600">
+               {insights?.high_risk_groups || 'High-risk regions and groups will be identified after analysis'}
+              </p>
             </div>
             <div className="bg-[#F5FAFE] rounded-xl p-6 shadow-md border-l-4 border-green-500">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 💡 Recommendations
               </h3>
-              <p className="text-sm text-gray-600">Preventative suggestions will be generated after analysis</p>
+              <p className="text-sm text-gray-600">
+              {insights?.recommendations || 'Preventative suggestions will be generated after analysis'}
+             </p>
             </div>
           </div>
         </section>
