@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { askGemini } from "../config/gemini";
 
 const ChatbotPage = () => {
@@ -7,11 +7,6 @@ const ChatbotPage = () => {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -33,46 +28,63 @@ const ChatbotPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#DBEEF8] to-[#FFFFFF] p-6 max-w-3xl mx-auto flex flex-col">
-      <h1 className="text-3xl font-bold mb-6 text-center">Smart ChatBot</h1>
-      <div className="flex-1 border rounded-lg p-4 shadow-md bg-white mb-4 overflow-y-auto" style={{ minHeight: 400 }}>
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`mb-2 flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`px-4 py-2 rounded-lg max-w-xs ${msg.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}>
-              {msg.text}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#DBEFF9] to-[#F2F8FD] px-2">
+      <div className="w-full max-w-4xl bg-[#F5FAFE] border-2 border-[#AACBDA] rounded-2xl shadow-lg flex flex-col -mt-32" style={{ minHeight: 500, height: "80vh" }}>
+        {/* Heading */}
+        <h1 className="text-2xl font-semibold text-[#2C6F85] text-center py-6 border-b border-[#E0E8F0] mb-0">
+          Smart ChatBot
+        </h1>
+        {/* Chat History */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" style={{ minHeight: 0 }}>
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`px-4 py-2 rounded-xl max-w-[80%] break-words text-base ${
+                  msg.sender === "user"
+                    ? "bg-[#2C6F85] text-white"
+                    : "bg-[#F5FAFE] border-2 border-[#AACBDA] text-[#2C6F85]"
+                }`}
+                style={{
+                  wordBreak: "break-word",
+                  overflowWrap: "break-word",
+                  whiteSpace: "pre-wrap"
+                }}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
-        {loading && (
-          <div className="flex justify-start mb-2">
-            <div className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 flex items-center">
-              <svg className="animate-spin h-5 w-5 mr-2 text-blue-500" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-              </svg>
-              Thinking...
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="px-4 py-2 rounded-xl bg-[#F5FAFE] border-2 border-[#AACBDA] text-[#2C6F85] flex items-center">
+                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                Thinking...
+              </div>
             </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
+          )}
+        </div>
+        {/* Input Area */}
+        <form onSubmit={handleSend} className="flex gap-3 p-4 border-t border-[#E0E8F0]">
+          <input
+            type="text"
+            className="flex-1 px-4 py-3 rounded-xl border-2 border-[#AACBDA] bg-white focus:outline-none focus:border-[#2C6F85] transition-colors"
+            placeholder="Type your message..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            className="bg-[#2C6F85] text-white px-6 py-3 rounded-xl hover:bg-[#1a4d5f] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading || !input.trim()}
+          >
+            Send
+          </button>
+        </form>
       </div>
-      <form onSubmit={handleSend} className="flex gap-2">
-        <input
-          type="text"
-          className="flex-1 px-4 py-2 border rounded focus:outline-none"
-          placeholder="Type your message..."
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          disabled={loading || !input.trim()}
-        >
-          Send
-        </button>
-      </form>
     </div>
   );
 };

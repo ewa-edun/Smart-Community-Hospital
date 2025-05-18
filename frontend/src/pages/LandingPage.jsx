@@ -267,13 +267,13 @@ const LandingPage = () => {
           <div className="flex justify-center gap-4">
             <Link
               to="/login"
-              className="px-8 py-3 text-lg text-blue-500 hover:text-blue-600 font-medium"
+              className="px-8 py-3 text-lg text-[#2C6F85] hover:text-[#1a4d5f] font-medium"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-lg font-medium transition-colors"
+              className="px-8 py-3 bg-[#2C6F85] text-white rounded-xl hover:bg-[#1a4d5f] text-lg font-medium transition-colors"
             >
               Sign Up
             </Link>
