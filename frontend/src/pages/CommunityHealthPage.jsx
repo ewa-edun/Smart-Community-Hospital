@@ -5,20 +5,21 @@ import Charts from "../components/CommunityHealth/Charts";
 const CommunityHealthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [setFile] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [stats, setStats] = useState(null);
-  const handleFileChange = (e) => setFile(e.target.files[0]);
 
- const handleUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    setUploadedFile(file);
+  const handleFileChange = (e) =>  setUploadedFile(e.target.files[0]);
+
+ const handleUpload = async () => {
+    if (!uploadedFile) {
+     alert('Please select a file first.');
+      return;
+    }
     setIsLoading(true);
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", uploadedFile);
 
       const res = await fetch("http://localhost:5000/analyze", {
         method: "POST",
@@ -61,44 +62,50 @@ const CommunityHealthPage = () => {
             <input
               type="file"
               accept=".csv,.xlsx,.xls"
-              onChange={handleUpload}
+              onChange={handleFileChange}
               className="hidden"
               id="file-upload"
             />
 
- <div>
-      <form onSubmit={handleUpload} className="mb-4">
-        <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileChange} />
-        <br></br>
-        <br></br>
-
-        <label
+            <label
               htmlFor="file-upload"
               className="inline-block px-6 py-3 bg-[#306F84] text-white rounded-lg cursor-pointer transition-colors hover:bg-[#2C6F85]"
             >
               {uploadedFile ? uploadedFile.name : 'Choose CSV or Excel file'}
             </label>
-      </form>
-        <Charts chartData={chartData} />
 
-        {/* Download Section */}
-              <div className="mt-6">
-                <button
-                  onClick={handleDownload}
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  Download Analysis Report
-                </button>
-              </div>
+            <div className="mt-4">
+              <button
+                onClick={handleUpload}
+                disabled={isLoading || !uploadedFile}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Analyzing...' : 'Upload & Analyze'}
+              </button>
             </div>
 
+            {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
 
             <p className="mt-4 text-sm text-gray-600">
               Upload survey data with columns like age, location, disease, vaccination status, etc.
             </p>
-            {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
+              {/* Charts */}
+        {chartData && <Charts chartData={chartData} />}
+
+          {/* Download Section */}
+          <div className="mt-6">
+            <button
+              onClick={handleDownload}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Download Analysis Report
+            </button>
+          </div>
           </div>
         </section>
+
+        
+
 
        {/* Updated Summary Stats section */}
       <section className="mb-8">

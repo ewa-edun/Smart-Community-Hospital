@@ -61,7 +61,9 @@ def analyze():
             return jsonify({'error': 'CSV format not recognized'}), 400
             
     except Exception as e:
+        print("Error during analysis:", str(e))  # Add this line
         return jsonify({'error': str(e)}), 500
+
 
 # --- Add this download route ---
 @app.route('/download/analysis_report.xlsx', methods=['GET'])
