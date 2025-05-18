@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Charts from "../components/CommunityHealth/Charts";
 
 const CommunityHealthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [file, setFile] = useState(null);
+  const [chartData, setChartData] = useState(null);
+
+  const handleFileChange = (e) => setFile(e.target.files[0]);
+
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -13,6 +19,19 @@ const CommunityHealthPage = () => {
       // Simulate loading
       setTimeout(() => setIsLoading(false), 2000);
     }
+  };
+
+   const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("http://localhost:5000/analyze", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    setChartData(data.chart);
   };
 
   return (
@@ -31,12 +50,23 @@ const CommunityHealthPage = () => {
               className="hidden"
               id="file-upload"
             />
-            <label
+
+ <div>
+      <form onSubmit={handleUpload} className="mb-4">
+        <input type="file" accept=".csv" onChange={handleFileChange} />
+        <br></br>
+        <br></br>
+
+        <label
               htmlFor="file-upload"
               className="inline-block px-6 py-3 bg-[#306F84] text-white rounded-lg cursor-pointer transition-colors hover:bg-[#2C6F85]"
             >
               {uploadedFile ? uploadedFile.name : 'Choose CSV or Excel file'}
             </label>
+      </form>
+      <Charts chartData={chartData} />
+    </div>
+
             <p className="mt-4 text-sm text-gray-600">
               Upload survey data with columns like age, location, disease, vaccination status, etc.
             </p>

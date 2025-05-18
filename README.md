@@ -77,11 +77,11 @@ Ask follow-up questions or get emergency recommendations from a Gemini-powered c
 
 ## 👥 Team Roles
 
-| Name      | Role                                      |
-| --------  | ----------------------------------------- |
-| **Tanya** | Frontend Design & UX Flow                 |
-| **Ishan** | Data Cleaning & Visualizations            |
-| **Ewa**   | Machine Learning & AI Chatbot Integration |
+| Name      | Role                                                 |
+| --------  | ---------------------------------------------------- |
+| **Tanya** | Frontend Design & UX Flow                            |
+| **Ishan** | Data Cleaning & Visualizations                       |
+| **Ewa**   | Machine Learning, Firebase, & AI Chatbot Integration |
 
 ---
 
