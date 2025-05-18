@@ -128,7 +128,7 @@ const HospitalResourcePage = () => {
                 {isLoading ? 'Analyzing...' : 'Upload & Analyze'}
               </button>
                <p className="mt-4 text-sm text-gray-600">
-                Upload hospital usage logs with resource consumption data
+                Upload hospital usage logs with columns hospital_name, location, type, ownership, total_beds, icu_beds_used, ventilators, oxygen_used, medications_used, icu_bed_demand, oxygen_demand, medication_demand, last_renovation_year, operational_status.
               </p>
             </div>
             {isLoading && <div className="mt-4 text-blue-500 font-medium">Processing...</div>}
