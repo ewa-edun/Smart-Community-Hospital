@@ -169,3 +169,9 @@ VITE_FIREBASE_MEASUREMENT_ID=your-firebase-measurement-id
 
 > **“One Dashboard. Two Lives Saved.”**
 > Community. Hospital. One solution.
+> 
+
+# Updates
+1st Place winner at Dreamhacks.
+
+We're going to further expand this project.
